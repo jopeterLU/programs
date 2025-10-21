@@ -84,13 +84,17 @@ pcm0=pcm;
 Rr=sqrt((Xx-x_cm).^2+(Yy-y_cm).^2);
 wid=max(Rr(BW==1)); % max r-value to use to calculate the center of mass
 
-BWframe=zeros(size(I));
-BWframe(Xx>(x_cm-Rp_max) & Xx<(x_cm+Rp_max) & Yy>(y_cm-Rp_max) & Yy<(y_cm+Rp_max))=1;
+if ~isempty(Rp_max)
+    BWframe=zeros(size(I));
+    BWframe(Xx>(x_cm-Rp_max) & Xx<(x_cm+Rp_max) & Yy>(y_cm-Rp_max) & Yy<(y_cm+Rp_max))=1;
+    x=x(x>(x_cm-Rp_max) & x<(x_cm+Rp_max));
+    y=y(y>(y_cm-Rp_max) & y<(y_cm+Rp_max));
+else
+    BWframe=ones(size(I));
+end
 
-x=x(x>(x_cm-Rp_max) & x<(x_cm+Rp_max));
 x_cm=x_cm-x(1)+1;
 x=x-x(1)+1;
-y=y(y>(y_cm-Rp_max) & y<(y_cm+Rp_max));
 y_cm=y_cm-y(end)+1;
 y=y-y(end)+1;
 [Xx,Yy]=meshgrid(x,y);
@@ -282,7 +286,7 @@ for n_t=1:length(nr)
         end
         Af(i)=p(1); % A(t)
         [yf,beta]=fkn_gauss(p,r,Isum(i),Isum(1),Ir0);    % y = Ir|r>R
-                
+
         % Compensates for temporal variations using beta and for
         % a net influx of molecules with y
         g(i,:)=(yf-Ir(i,:))/beta;
