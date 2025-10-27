@@ -1,0 +1,4 @@
+Version 2.7 was tested on MATLAB R2025b
+Requires the following toolboxes:
+* Image Processing Toolbox
+* Optimization Toolbox
